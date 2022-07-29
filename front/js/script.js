@@ -1,41 +1,42 @@
-// Variable contenant la liste des produits
-const itemsSection = document.getElementById('items');
+//DOM
+const items = document.querySelector("#items");
 
-// Fonction exécuter au chargement de la page
-// Cette fonction permet d'affiache les produits sur la page index
-(async function onPageload() {
+//fetch api
+async function getProducts() {
   try {
-    //On récupère la liste des produits du serveur
-    let products = await getProducts();
-    products.forEach((product) => {
-     // itemsSection.innerHTML += displayProduct(product);
-      itemsSection.insertAdjacentHTML('beforeend', displayProduct(product));
-
-
-
-    })
-  } catch(e) {
+    const response = await fetch("http://localhost:3000/api/products");
+    const data = await response.json();
+    displayProducts(data);
+  } catch (e) {
     console.log(e);
   }
-})(); //fonction autoexecutable
-
-// Fonction permettant de récupérer la liste de produit du serveur
-async function getProducts() {
-  const response = await fetch('http://localhost:3000/api/products');
-  if (!response.ok) {
-    throw new Error(`Erreur HTTP ! statut : ${response.status}`);
-  }
-  return  response.json();
 }
 
-//contenu du html
-function displayProduct(product) {
-  return `
-  <a href="${"./product.html?id=" + product._id}">
-    <article>
-      <img src="${product.imageUrl}" alt="${product.altTxt}">
-      <h3 class="productName">${product.name}</h3>
-      <p class="productDescription">${product.description}</p>
-    </article>
-  </a> `;
+getProducts();
+
+//create and display items in index html
+function displayProducts(data) {
+  //loop through data's array
+  for (const i of data) {
+    //create elements pour each array index
+    const link = document.createElement("a");
+    const article = document.createElement("article");
+    const img = document.createElement("img");
+    const h3 = document.createElement("h3");
+    const p = document.createElement("p");
+
+    //assign elements
+    link.href = `./product.html?id=${i._id}`;
+    img.src = i.imageUrl;
+    img.alt = i.altTxt;
+    h3.textContent = i.name;
+    p.textContent = i.description;
+
+    //appended child layout
+    items.appendChild(link);
+    link.appendChild(article);
+    article.appendChild(img);
+    article.appendChild(h3);
+    article.appendChild(p);
+  }
 }
