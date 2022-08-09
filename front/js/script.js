@@ -1,7 +1,7 @@
-//DOM
-const items = document.querySelector("#items");
+//sélectionner le conteneur dans lequel mettre les produits 
+const productsContainer = document.querySelector("#items");
 
-//fetch api
+// récuperation des produits de l'api en utilisant la methode fetch 
 async function getProducts() {
   try {
     const response = await fetch("http://localhost:3000/api/products");
@@ -33,10 +33,12 @@ function displayProducts(data) {
     p.textContent = i.description;
 
     //appended child layout
-    items.appendChild(link);
     link.appendChild(article);
     article.appendChild(img);
     article.appendChild(h3);
     article.appendChild(p);
+    // on insert l'article produit dans la section 
+    // product container 
+    productsContainer.appendChild(link);
   }
 }
